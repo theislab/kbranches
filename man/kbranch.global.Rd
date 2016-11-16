@@ -88,7 +88,7 @@ and calculates the corresponding GAP statistic
  clust=kbranch.global(input_dat,Kappa=3)
 
  #plot the clustering results
- plot(input_dat,pch=21,col=clust$cluster,bg=clust$cluster,main='K-Star clustering')
+ plot(input_dat,pch=21,col=clust$cluster,bg=clust$cluster,main='K-Branch clustering')
 
 
 }

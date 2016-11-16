@@ -2,11 +2,11 @@
 % Please edit documentation in R/kbranch.R
 \name{kbranch.local}
 \alias{kbranch.local}
-\title{Local K-Star clustering for identifying regions of interest}
+\title{Local K-Star clustering for identifying regions of interest!}
 \usage{
 kbranch.local(input_dat, Dmat = NULL, S_neib = NULL, S_quant = 0.1,
   S_GUI_helper = FALSE, parallel_ncores = NULL, min_radius_quantile = 0.5,
-  logfile = "log.kbranch.global.txt", nstart = 5, nstart_GAP = 1,
+  logfile = "log.kbranch.local.txt", nstart = 5, nstart_GAP = 1,
   B_GAP = 5, medoids = FALSE, init_Kmeans = TRUE)
 }
 \arguments{
@@ -62,7 +62,7 @@ such as tips of branches or branching regions
  set.seed(1)
 
  #load the data, already in diffusion map format
- input_dat=scdata.loop.map[,1:2] #keep the first 2 diffusion components
+ input_dat=scdata.loop.dmap[,1:2] #keep the first 2 diffusion components
 
  #if the data are in not in diffusion map then
  #performing diffusion map dimensionality reduction
@@ -87,9 +87,9 @@ such as tips of branches or branching regions
  #pop-up to aid in their selection. Press OK to update the results.
  #When you are happy with the filtering press 'x' to close the window.
 
- #smoothing: tip cell if at least 2 in 5 neighbors are tip cells
+ #smoothing: tip cell if at least 5 in 5 neighbors are tip cells
  tips=identify_regions(input_dat=input_dat,gap_scores=res$gap_scores,Dist=Dmat,
-                       smoothing_region = 5,smoothing_region_thresh = 2,mode='tip')
+                       smoothing_region = 5,smoothing_region_thresh = 5,mode='tip')
 
  #plot the separate tips
  plot(input_dat,pch=21,col=tips$cluster+1,bg=tips$cluster+1,main='tip regions')

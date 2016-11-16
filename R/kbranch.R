@@ -39,7 +39,7 @@
 #'  set.seed(1)
 #'
 #'  #load the data, already in diffusion map format
-#'  input_dat=scdata.loop.map[,1:2] #keep the first 2 diffusion components
+#'  input_dat=scdata.loop.dmap[,1:2] #keep the first 2 diffusion components
 #'
 #'  #if the data are in not in diffusion map then
 #'  #performing diffusion map dimensionality reduction
@@ -64,9 +64,9 @@
 #'  #pop-up to aid in their selection. Press OK to update the results.
 #'  #When you are happy with the filtering press 'x' to close the window.
 #'
-#'  #smoothing: tip cell if at least 2 in 5 neighbors are tip cells
+#'  #smoothing: tip cell if at least 5 in 5 neighbors are tip cells
 #'  tips=identify_regions(input_dat=input_dat,gap_scores=res$gap_scores,Dist=Dmat,
-#'                        smoothing_region = 5,smoothing_region_thresh = 2,mode='tip')
+#'                        smoothing_region = 5,smoothing_region_thresh = 5,mode='tip')
 #'
 #'  #plot the separate tips
 #'  plot(input_dat,pch=21,col=tips$cluster+1,bg=tips$cluster+1,main='tip regions')
@@ -93,7 +93,7 @@
 #'@importFrom parallel detectCores makeCluster
 #'@importFrom foreach foreach getDoParWorkers %dopar%
 #'@importFrom fgui gui guiGetValue guiSetValue
-kbranch.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helper=FALSE,parallel_ncores=NULL,min_radius_quantile=0.5,logfile='log.kbranch.global.txt',
+kbranch.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helper=FALSE,parallel_ncores=NULL,min_radius_quantile=0.5,logfile='log.kbranch.local.txt',
                        nstart=5,nstart_GAP=1,B_GAP=5,medoids=FALSE,init_Kmeans=TRUE)
 {
   # kbranch.local: identify regions based on the gap statistic produced by local clustering of k halflines
@@ -992,7 +992,7 @@ scale_S_neib=function(input_dat,n,K_init,Dist,dmin)
 #'  clust=kbranch.global(input_dat,Kappa=3)
 #'
 #'  #plot the clustering results
-#'  plot(input_dat,pch=21,col=clust$cluster,bg=clust$cluster,main='K-Star clustering')
+#'  plot(input_dat,pch=21,col=clust$cluster,bg=clust$cluster,main='K-Branch clustering')
 #'
 #'
 #'@export
@@ -1368,13 +1368,10 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
       v=Vmat[pos,]
       v_outer=v%o%v
       x=as.numeric(data[i,])#otherwise matrix operations won't work
-      # print('x');print(x);print('c0');print(c0);print(x-c0)
       x_hat=x-c0#take the C1 vector as the starting point of the axes of the vector space
-      # print('x-c0 happened')
       if(sign(as.numeric(x_hat%*%v))>=0)#check dot product positive -> must be close to half-line, not line
       {
         err=err+line_dist(x,c0,v_outer=v_outer)
-        # pdprod[i]=1#the data point has a positive dot product with the half line
       }else#point on the wrong side, measure distance from the center
       {
         err=err+point_dist(x,c0)
@@ -1413,9 +1410,6 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
     #normalize each direction vector to unit length
     Vmat=t(apply(Vmat,1,function(x){x/sqrt(sum(x^2))}))
 
-    # print('assigning...')
-    # print(Vmat)
-    # dclass=assign_to_closest_hline2(xdata=input_dat,c1,c2,c3,v1,v2,v3) #initialize class labels
     dclass=assign_to_closest_hline(Kappa=Kappa,input_dat=input_dat,c0=c0,Vmat=Vmat) #initialize class labels
 
     # print('classes assigned')
@@ -1451,7 +1445,6 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
 
       if(keep_c_fixed==FALSE)#update the center, unless it is fixed
       {
-        # print('updating c...')
         #update the center of the half-lines
         c0=update_c(Kappa=Kappa,input_dat = input_dat,dclass = dclass,Vmat,c_old = c0)#;print(c0)
       }
@@ -1703,7 +1696,6 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
 
     total_error=0#the overall clustering error
     xdata_class=data.frame(class=rep(0,nrow(input_dat)))
-    # xdata_class=data.frame(class=rep(0,nrow(input_dat)),wrong_x=rep(NA,nrow(input_dat)),wrong_y=rep(NA,nrow(input_dat)))
     for(i in 1:nrow(input_dat))
     {
       # print(paste('i is',i))
@@ -1806,10 +1798,6 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
           }
           Vmat_kmeans=Vmat
 
-          #       Vmat_kmeans=update_Vmat(Kappa,input_dat,dclass=dclass,c0=Cmat[1,])
-          #       Vmat_kmeans=Vmat_kmeans[1:2,]
-          #       # print(Vmat_kmeans)
-
         }else #Kappa>=3, set the directions to the K-means directions centered at the K-Means center
         {
           Vmat_kmeans=update_Vmat(Kappa=Kappa,input_dat=input_dat,dclass=dclass,c0=c0_kmeans)
@@ -1839,15 +1827,11 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
           {
             #initialize c0 to a random sample
             #initialize v1,...,vk to random samples (centered at c0): e.g.vk=ck-c0
-
-            # print('running as usual')
             random_center_pos=sample(x=NROW(input_dat),size=1)
             c0=as.numeric(input_dat[random_center_pos,])#select a random data point as the center of the half-lines
 
             input_dat2=input_dat[-random_center_pos,]
             Vmat=as.matrix(input_dat2[sample(nrow(input_dat2),Kappa),])
-            #         print('Vmat before')
-            #         print(Vmat)
             for(i in 1:nrow(Vmat))
             {
               Vmat[i,]=Vmat[i,]-c0
@@ -1860,9 +1844,7 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
             #initialize c0 to a random sample
             #initialize v1,...,vk to the k-means directions
 
-            # print('running as usual')
             c0=as.numeric(input_dat[sample(x=NROW(input_dat),size=1),])#select a random data point as the center of the half-lines
-            # Vmat_kmeans=update_Vmat(Kappa,input_dat,dclass=dclass,c0=c0)
             retval=kbranch.global_internal(Kappa=Kappa,input_dat=input_dat,c0=c0,Vmat=Vmat_kmeans,silent=silent_internal)
           }
         }else #run the medoids version (with random initialization)
@@ -1879,18 +1861,10 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
         {
           if(NROW(fixed_center)==1)#it is only one value: refers to the row of the sample to use as a fixed center
           {
-            # print('NROW 1')
-            # if(Kappa==1)
             c0=as.numeric(input_dat[fixed_center,])
 
-            # c0=input_dat[fixed_center,]
             input_dat2=input_dat[-fixed_center,]
-            # View(input_dat2)
             Vmat=as.matrix(input_dat2[sample(nrow(input_dat2),Kappa),])
-            # View(Vmat)
-            # if((Kappa==1)&(NCOL(input_dat)<3)){Vmat=t(Vmat)}
-            # print(paste('NCOL(Vmat)',NCOL(Vmat)))
-            # print(paste('NROW(c0)',NROW(c0)))
             if(NCOL(Vmat)!=NROW(c0)){Vmat=t(Vmat)}#need to transpose Vmat to get it right...
           }else#use the vector fixed center as the fixed center of the halflines
           {
@@ -1899,12 +1873,6 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
             c0=as.numeric(fixed_center)
             Vmat=as.matrix(input_dat[sample(nrow(input_dat),Kappa),])
           }
-          # print(paste('c0 is',c0))
-          # print(NROW(c0))
-          # print(NCOL(c0))
-          # print('and vmat...')
-          # print(Vmat)
-          #print(dim(Vmat))
           for(i in 1:nrow(Vmat))
           {
             Vmat[i,]=Vmat[i,]-c0
@@ -2021,34 +1989,6 @@ compute_all_distances=function(input_dat)
   #     -input_dat: data frame of input data with rows=samles and cols=dimensions
   #   return values:
   #     -Dist: matrix containing sample distances
-
-  # N=nrow(input_dat)#number of samples
-  # P=ncol(input_dat)#the number of dimensions, the data are in R^d (d-dimensional)
-  # # print(paste('N',N,'P',P))
-  # Dist=matrix(data = NA,nrow = N,ncol = N)
-  # for(i in 1:N)
-  # {
-  #   for(j in 1:N)
-  #   {
-  #     if(i==j)#distance of sample to itself is zero
-  #     {
-  #       Dist[i,j]=0
-  #     }else
-  #     {
-  #       if(is.na(Dist[i,j])==TRUE)#has not been computed yet
-  #       {
-  #         x1=as.numeric(input_dat[i,])#the i-th sample
-  #         x2=as.numeric(input_dat[j,])#the j-th sample
-  #         d=norm(as.matrix(x1-x2),'2')^2#compute the squared Euclidian distance
-  #         # d=abs(norm(as.matrix(x1-x2),'2'))#compute the Euclidian distance, abs for numerical stability
-  #         Dist[i,j]=d;
-  #         Dist[j,i]=d;#the distance is symmetric, so the matrix Dist is symmetric
-  #       }
-  #     }
-  #
-  #   }
-  # }
-  # return(Dist)
   return(as.matrix(stats::dist(input_dat)^2))#squared Euclidean distance matrix
 }
 
