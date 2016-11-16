@@ -1,5 +1,5 @@
 #'
-#'Local K-Star clustering for identifying regions of interest
+#'Local K-Star clustering for identifying regions of interest!
 #'
 #'Perform local clustering using kbranch.global in order to generate a GAP score for each sample.
 #'The GAP score of each sample can be subsequantly used to identify regions of interest
