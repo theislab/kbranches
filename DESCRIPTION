@@ -1,0 +1,23 @@
+Package: kbranch
+Type: Package
+Title: K-Branch clustering
+Version: 0.1
+Date: 2016-06-03
+Author: Nikolaos-Kosmas Chlis
+Maintainer: <nikolaos.chlis@helmholtz-muenchen.de>
+Description: Branching and tip region identification in single cell trajectories
+License: 
+LazyData: TRUE
+RoxygenNote: 5.0.1
+Depends: R (>= 3.2.0)
+Imports:
+	rgl,
+	heplots,
+	doParallel,
+	parallel,
+	foreach,
+	fgui,
+	RColorBrewer,
+	stats,
+	cluster,
+	destiny
