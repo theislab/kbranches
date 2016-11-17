@@ -47,3 +47,5 @@ Then, the data can be plotted using cluster assignment `clust$cluster` as color,
 The local version of K-Branch applies the method introduced above, locally in the neighbourhood of each data point.
 That is, `kbranch.global` is run for $K=1,2,3$ while keeping the center fixed at each data point. Additionally, the original and modified GAP statistics are calculated for each clustering, in order to perform model selection at a subsequent step.
 In terms of hyperparameters, *S_neib* is perhaps the most important, as it controls the neighbourhood size. If it is not provided, it is estimated automatically. In any case, if *S_GUI_helper* is set to *TRUE*, a graphical user interface will show up that will visualize the neighbourhood for different values of *S_neib* and helps the user decide whether to accept the suggested value, or fine tune it.
+
+
