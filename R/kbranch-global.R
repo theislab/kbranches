@@ -91,7 +91,7 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
   #     -show_plots_GAP: if TRUE, show the plots when performing clustering under the null distribution to calculate the GAP statistic (for debugging)
   #
   #   return values:
-  #     -cluster: cluster assignment for each sample (numeric)
+  #     -cluster: cluster assignment for each sample (integer)
   #     -Kappa: number of clusters (halflines)
   #     -err: total clustering cost
   #     -iters: total iterations of the algorithm
@@ -1029,7 +1029,7 @@ kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=
     retval=kbranch.global_internal(Kappa,input_dat,c0,Vmat,silent)
   }
 
-  retval$cluster=retval$dclass$class
+  retval$cluster=as.integer(retval$dclass$class)
   retval$call=match.call()
   retval$dclass=NULL
   return(retval)
