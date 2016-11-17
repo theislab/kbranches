@@ -71,9 +71,9 @@
 #' #plot the separate tips
 #' plot(input_dat, pch=21, col = tips$cluster + 1, bg = tips$cluster + 1, main='tip regions')
 #'
-#' #smoothing: branching region cell if at least 5 in 5 neighbors are branching region cells
+#' #smoothing: branching region cell if at least 10 in 10 neighbors are branching region cells
 #' branch_reg <- identify_regions(input_dat = input_dat, gap_scores = res$gap_scores, Dist = Dmat,
-#'                                smoothing_region = 5, smoothing_region_thresh = 5, mode='branch')
+#'                                smoothing_region = 10, smoothing_region_thresh = 10, mode='branch')
 #'
 #' #plot the branching_region(s)
 #' plot(input_dat, pch = 21, col = branch_reg$cluster + 1, bg = branch_reg$cluster + 1, main = 'branching regions')
