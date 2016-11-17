@@ -2,4 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+Rplots.pdf
+log.kbranch.local.txt
 inst/doc
