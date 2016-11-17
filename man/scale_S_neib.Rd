@@ -25,8 +25,7 @@ scales the number of neighbors (neighbourhood size) depending on the local sampl
 keeps increasing K until the distance to the furthest of the K neighbors is above the dmin threshold
 }
 \examples{
-\dontrun
-{
+\dontrun{
 Dist=compute_all_distances(scdata.3lines)
 
 #find the 5 nearest neghbours of the second sample

@@ -25,8 +25,7 @@ refilter_identified_regions(input_dat, sample_labels = NULL,
 }
 \value{
 a list with elements:
-\itemize
-{
+\itemize{
  \item - is_in_region: a logical vector indicating which samples are part of the region (TRUE) and which not (FALSE)
  \item - is_in_region_filtered: same as 'is_in_region', but after S_neib filtering to reduce noise.
 }
@@ -37,8 +36,7 @@ Used only in rare cases where there is some noise remaining in the result of ide
 }
 \examples{
 this is an example
-\dontrun
-{
+\dontrun{
 
  example coming soon...
 

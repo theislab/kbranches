@@ -45,8 +45,7 @@ kbranch.global(input_dat, Kappa, Dmat = NULL, init_Kmeans = TRUE,
 }
 \value{
 a list with elements:
-\itemize
-{
+\itemize{
  \item - cluster: cluster assignment for each sample (numeric)
  \item - Kappa: number of clusters (halflines)
  \item - err: total clustering cost
