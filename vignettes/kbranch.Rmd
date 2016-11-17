@@ -39,8 +39,12 @@ input_dat=destiny::as.data.frame(dmap)[,1:2]
 clust=kbranch.global(input_dat,Kappa=3)
 ```
 
-Then, the data can be plotted using cluster assignment `clust$cluster` as color, resulting in:
- ![](figs/kbranch_global.png)
+Then, the data can be plotted using cluster assignment `clust$cluster` as color:
+
+```{r kbranch.global plot}
+plot(dmap, 1:2, col = clust$cluster, pch = 20)
+#or plot(input_dat, col = ...)
+```
  
 ## Local K-Branch
 
