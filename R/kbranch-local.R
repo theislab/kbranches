@@ -13,7 +13,7 @@
 #'@param S_GUI_helper: If TRUE, a GUI helper will pop-up to aid in the selection of S_neib. If global_S is TRUE, then
 #'the GUI will recommend a value for S_neib and visualize the neighbourhood for all data points. If global_S is false, the
 #'GUI will only visualize the neighbourhood for every data point, since S_neib is selected automatically for each data point.
-#'@param parallel_ncores: number of cores to use if parallel==TRUE. If set to NULL it will use the max number of
+#'@param parallel_ncores: number of cores to use. If set to NULL (default) it will use the max number of
 #'available cores. Defaults to NULL.
 #'@param min_radius_quantile: the percentile to use for the identification of the 'median neighbourhood', defaults to 0.5 (median).
 #'@param logfile: logfile to print output in the case of parallel computation.
