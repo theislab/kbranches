@@ -57,7 +57,7 @@ Performs local filtering to reduce noise in the extracted labels.
 }
 \examples{
 
-see example of kbranch.local
+#see example of kbranch.local
 
 }
 

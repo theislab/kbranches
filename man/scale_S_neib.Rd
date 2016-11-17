@@ -25,11 +25,10 @@ scales the number of neighbors (neighbourhood size) depending on the local sampl
 keeps increasing K until the distance to the furthest of the K neighbors is above the dmin threshold
 }
 \examples{
-\dontrun{
-Dist=compute_all_distances(scdata.3lines)
+data(scdata.3lines.simulated6genes)
+Dist <- compute_all_distances(scdata.3lines.simulated6genes)
 
-#find the 5 nearest neghbours of the second sample
-neibs=find_K_nearest(n=2,K=5,Dist=Dist)
-}
+#find the 5 nearest neighbours of the second sample
+neibs <- find_K_nearest(n = 2, K = 5, Dist = Dist)
 }
 

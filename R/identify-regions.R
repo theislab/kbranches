@@ -31,7 +31,7 @@
 #'
 #'@examples
 #'
-#'see example of kbranch.local
+#' #see example of kbranch.local
 #'
 #'@export
 identify_regions=function(input_dat,mode='tip',tip_mode='3',gap_scores=NULL,smoothing_region=NULL,smoothing_region_thresh=NULL,Dist,dotsize1=7,dotsize2=7,

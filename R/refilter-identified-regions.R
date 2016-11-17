@@ -18,12 +18,9 @@
 #'}
 #'
 #'@examples
-#'this is an example
-#'\dontrun{
 #'
-#'  example coming soon...
+#' # TODO: example coming soon...
 #'
-#'}
 #'@export
 refilter_identified_regions=function(input_dat,sample_labels=NULL,smoothing_region=NULL,smoothing_region_thresh=NULL,Dist,dotsize1=7,dotsize2=7)#scale the number of neighbors depending on the local density)
 {
