@@ -1,58 +1,49 @@
 ---
 title: "Introduction to the kbranch package"
-author: "Nikolaos-Kosmas Chlis"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+author: "Nikolaos-Kosmas Chlis, <http://comp.bio>"
+date: "November 17, 2016"
+output: html_document
 ---
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kbranch)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+## Introduction
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+This document provides some basic use cases for the kbranch package. The main idea behind the K-Branch method is to identify regions of interest (branching regions and tips) in differentiation trajectories of single cells. So far, K-Branch is intended to be used on the diffusion map representation of the data, so the user should either provide the data in diffusion map space or use the [destiny](http://bioconductor.org/packages/release/bioc/html/destiny.html) package perform diffusion map dimensionality reduction.
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+## Global K-Branch
 
-## More Examples
+The purpose of this method is to cluster all data point into a set of K halflines (branches) with a common center. The number of branches K is a user defined hyperparameter. Moreover, the method can compute the GAP statistic, as well as a modified version of the GAP statistic that measures the dispersion around the branches, as opposed to the original GAP that measures the dispersion around cluster means. The main purpose of this method is to be used locally to identify branching and tip regions in the data. However, it is useful to develop an understanding of how the clustering method works. To this extent, the following example is presented.
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+The code also provides and example of how to use the destiny package to calculate the diffusion map representation of the data.
+The sigma hyperparameter of destiny::DiffusionMap a user specified hyperparameter, but the package is also able to estimate an appropriate value.
+```{r kbranch.global}
+set.seed(1)
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+#laod the data
+raw_dat=scdata.3lines.simulated6genes_subsampled
+
+#laod the data
+raw_dat=scdata.3lines.simulated6genes_subsampled
+
+#perform diffusion map dimensionality reduction
+dmap=destiny::DiffusionMap(raw_dat,sigma = 1000)
+
+#keep the first 2 diffusion components
+input_dat=destiny::as.data.frame(dmap)[,1:2]
+
+#cluster into a K-Star with K=3
+clust=kbranch.global(input_dat,Kappa=3)
 ```
 
-Also a quote using `>`:
+Then, the data can be plotted using cluster assignment `clust$cluster` as color, resulting in:
+ ![](figs/kbranch_global.png)
+ 
+## Local K-Branch
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+The local version of K-Branch applies the method introduced above, locally in the neighbourhood of each data point.
+That is, `kbranch.global` is run for $K=1,2,3$ while keeping the center fixed at each data point. Additionally, the original and modified GAP statistics are calculated for each clustering, in order to perform model selection at a subsequent step.
+In terms of hyperparameters, *S_neib* is perhaps the most important, as it controls the neighbourhood size. If it is not provided, it is estimated automatically. In any case, if *S_GUI_helper* is set to *TRUE*, a graphical user interface will show up that will visualize the neighbourhood for different values of *S_neib* and helps the user decide whether to accept the suggested value, or fine tune it.
