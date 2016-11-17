@@ -1,7 +1,15 @@
+#' Clustering on single cell trajectories.
 #'
-#'Clustering on K-Halflines
+#' The \pkg{kbranch} package provides two main functions
+#' \itemize{
+#'    \item \code{\link{kbranch.global}}
+#'    \item \code{\link{kbranch.local}}
+#' }
+"_PACKAGE"
 #'
-#'Clusters data on K-Halflines with a common center
+#'Clustering on K-Branches
+#'
+#'Clusters data on K-Branches (halflines) with a common center
 #'and calculates the corresponding GAP statistic
 #'
 #'@param input_dat: data frame of input data with rows=samles and cols=dimensions.
@@ -47,7 +55,7 @@
 #'  #cluster the 2D data on three haflines
 #'  set.seed(1)
 #'
-#'  #laod the data
+#'  #load the data
 #'  raw_dat=scdata.3lines.simulated6genes_subsampled
 #'
 #'  #perform diffusion map dimensionality reduction

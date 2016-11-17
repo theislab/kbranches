@@ -2,7 +2,7 @@
 % Please edit documentation in R/kbranch-global.R
 \name{kbranch.global}
 \alias{kbranch.global}
-\title{Clustering on K branches}
+\title{Clustering on K-Branches}
 \usage{
 kbranch.global(input_dat, Kappa, Dmat = NULL, init_Kmeans = TRUE,
   c0 = NULL, Vmat = NULL, nstart = 20, nstart_GAP = 20,
@@ -67,8 +67,8 @@ a list with elements:
 }
 }
 \description{
-Clusters data on K-Halflines with a common center
-and calculates the corresponding GAP statistic (optional)
+Clusters data on K-Branches (halflines) with a common center
+and calculates the corresponding GAP statistic
 }
 \examples{
  #cluster the 2D data on three haflines
