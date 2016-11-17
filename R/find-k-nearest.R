@@ -13,12 +13,10 @@
 #'}
 #'
 #'@examples
-#'\dontrun{
-#'  Dist=compute_all_distances(scdata.3lines.simulated6genes_subsampled)
+#' Dist <- compute_all_distances(scdata.3lines.simulated6genes_subsampled)
 #'
-#'  #find the 5 nearest neghbours of the second sample
-#'  neibs=find_K_nearest(n=2,K=5,Dist=Dist)
-#' }
+#' #find the 5 nearest neghbours of the second sample
+#' neibs <- find_K_nearest(n=2, K = 5, Dist = Dist)
 #'@export
 find_K_nearest=function(n,K=3,Dist)
 {

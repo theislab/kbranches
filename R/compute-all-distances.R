@@ -7,9 +7,8 @@
 #'@return Dist: a matrix containing all sample distances (square Euclidean)
 #'
 #'@examples
-#'\dontrun{
-#'  Dist=compute_all_distances(scdata.3lines)
-#'}
+#' data(scdata.3lines.simulated6genes)
+#' Dist <- compute_all_distances(scdata.3lines.simulated6genes)
 #'@export
 compute_all_distances=function(input_dat)
 {

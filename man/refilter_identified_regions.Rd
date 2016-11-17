@@ -35,11 +35,8 @@ Refilters the results extracted by identify_regions().
 Used only in rare cases where there is some noise remaining in the result of identify_regions().
 }
 \examples{
-this is an example
-\dontrun{
 
- example coming soon...
+# TODO: example coming soon...
 
-}
 }
 

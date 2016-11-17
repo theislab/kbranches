@@ -23,7 +23,7 @@
 #'       Defaults to 1, increase it (e.g. to 5 or 10) if the results are too noisy.
 #'@param B_GAP: number of bootstrap datasets used to compute the GAP statistic.
 #'       Defaults to 5, increase it (e.g. to 10 or 100) if the results are too noisy.
-#'@param medoids: if TRUE, the medoids version of khalflines will be used (slower).
+#'@param medoids: if TRUE, the medoids version of kbranch will be used (slower).
 #'@param init_Kmeans: if TRUE, use K-Means for the initialization of K-haflines, otherwise use random initialization
 #'
 #'@return a list with elements:
@@ -34,55 +34,53 @@
 #'}
 #'
 #'@examples
-#'  #this example might take some time to run
-#'  set.seed(1)
+#' #this example might take some time to run
+#' set.seed(1)
 #'
-#'  #load the data, already in diffusion map format
-#'  input_dat=scdata.loop.dmap[,1:2] #keep the first 2 diffusion components
+#' #load the data, already in diffusion map format
+#' data(scdata.loop.dmap)
+#' input_dat <- scdata.loop.dmap[, 1:2] #keep the first 2 diffusion components
 #'
-#'  #if the data are in not in diffusion map then
-#'  #performing diffusion map dimensionality reduction
-#'  #is necessary, for example:
-#'  #raw_dat=scdata.loop
-#'  #dmap=destiny::DiffusionMap(raw_dat,sigma = 1000)
-#'  #input_dat=destiny::as.data.frame(dmap)[,1:2] #keep the first 2 diffusion components
+#' #if the data are in not in diffusion space then
+#' #performing diffusion map dimensionality reduction
+#' #is necessary, for example:
+#' #load(scdata.loop)
+#' #dmap <- destiny::DiffusionMap(scdata.loop, sigma = 1000)
+#' #input_dat <- destiny::as.data.frame(dmap)[, 1:2] #keep the first 2 diffusion components
 #'
-#'  #compute the distances among all samples
-#'  Dmat=compute_all_distances(input_dat)
+#' #compute the distances among all samples
+#' Dmat <- compute_all_distances(input_dat)
 #'
-#'  #perform local clustering to identify regions
-#'  #if you haven't specified the neighbourhood size S, it will be estimated
-#'  #set S_GUI_helper to FALSE for manual fine-tuning
+#' #perform local clustering to identify regions
+#' #if you haven't specified the neighbourhood size S, it will be estimated
+#' #set S_GUI_helper to FALSE for manual fine-tuning
 #'
-#'  res=kbranch.local(input_dat=input_dat,Dmat=Dmat)
+#' res <- kbranch.local(input_dat = input_dat, Dmat = Dmat)
 #'
-#'  #identify regions of interest based on the GAP score
-#'  #of each sample computed by kbranch.local
+#' #identify regions of interest based on the GAP score
+#' #of each sample computed by kbranch.local
 #'
-#'  #If smoothing_region and smoothing_region_thresh are NULL, a GUI will
-#'  #pop-up to aid in their selection. Press OK to update the results.
-#'  #When you are happy with the filtering press 'x' to close the window.
+#' #If smoothing_region and smoothing_region_thresh are NULL, a GUI will
+#' #pop-up to aid in their selection. Press OK to update the results.
+#' #When you are happy with the filtering press 'x' to close the window.
 #'
-#'  #smoothing: tip cell if at least 5 in 5 neighbors are tip cells
-#'  tips=identify_regions(input_dat=input_dat,gap_scores=res$gap_scores,Dist=Dmat,
-#'                        smoothing_region = 5,smoothing_region_thresh = 5,mode='tip')
+#' #smoothing: tip cell if at least 5 in 5 neighbors are tip cells
+#' tips <- identify_regions(input_dat = input_dat, gap_scores = res$gap_scores, Dist = Dmat,
+#'                          smoothing_region = 5, smoothing_region_thresh = 5, mode = 'tip')
 #'
-#'  #plot the separate tips
-#'  plot(input_dat,pch=21,col=tips$cluster+1,bg=tips$cluster+1,main='tip regions')
+#' #plot the separate tips
+#' plot(input_dat, pch=21, col = tips$cluster + 1, bg = tips$cluster + 1, main='tip regions')
 #'
-#'  #smoothing: branching region cell if at least 5 in 5 neighbors are branching region cells
-#'  branch_reg=identify_regions(input_dat=input_dat,gap_scores=res$gap_scores,
-#'              Dist=Dmat,smoothing_region = 5,smoothing_region_thresh = 5,mode='branch')
+#' #smoothing: branching region cell if at least 5 in 5 neighbors are branching region cells
+#' branch_reg <- identify_regions(input_dat = input_dat, gap_scores = res$gap_scores, Dist = Dmat,
+#'                                smoothing_region = 5, smoothing_region_thresh = 5, mode='branch')
 #'
-#'  #plot the branching_region(s)
-#'  plot(input_dat,pch=21,col=branch_reg$cluster+1,bg=branch_reg$cluster+1,main='branching regions')
-#'\dontrun{
-#'  ###################################################
-#'  #          end of example                         #
-#'  ###################################################
+#' #plot the branching_region(s)
+#' plot(input_dat, pch = 21, col = branch_reg$cluster + 1, bg = branch_reg$cluster + 1, main = 'branching regions')
 #'
-#'
-#'}
+#' ###################################################
+#' #          end of example                         #
+#' ###################################################
 #'@export
 #'
 #'@importFrom rgl open3d plot3d points3d rgl.clear
@@ -402,7 +400,7 @@ kbranch.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helper=
 
   writeLines(c(''), logfile)
   #res_foreach <- foreach(i=1:N,.export = curr_env) %dopar%
-  res_foreach <- foreach(i=1:N,.packages = 'khalflines') %dopar%
+  res_foreach <- foreach(i=1:N,.packages = 'kbranch') %dopar%
   {
     #print the progress in a logfile
     sink(logfile,append = T)

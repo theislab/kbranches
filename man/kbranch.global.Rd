@@ -71,23 +71,24 @@ Clusters data on K-Branches (halflines) with a common center
 and calculates the corresponding GAP statistic
 }
 \examples{
- #cluster the 2D data on three haflines
- set.seed(1)
+#cluster the 2D data on three halflines
+set.seed(1)
 
- #load the data
- raw_dat=scdata.3lines.simulated6genes_subsampled
+#load the data
+data(scdata.3lines.simulated6genes_subsampled)
+raw_dat <- scdata.3lines.simulated6genes_subsampled
 
- #perform diffusion map dimensionality reduction
- dmap=destiny::DiffusionMap(raw_dat,sigma = 1000)
+#perform diffusion map dimensionality reduction
+dmap <- destiny::DiffusionMap(raw_dat, sigma = 1000)
 
- #keep the first 2 diffusion components
- input_dat=destiny::as.data.frame(dmap)[,1:2]
+#keep the first 2 diffusion components
+input_dat <- destiny::as.data.frame(dmap)[, 1:2]
 
- #cluster into a K-Star with K=3
- clust=kbranch.global(input_dat,Kappa=3)
+#cluster into a K-Star with K=3
+clust <- kbranch.global(input_dat, Kappa = 3)
 
- #plot the clustering results
- plot(input_dat,pch=21,col=clust$cluster,bg=clust$cluster,main='K-Branch clustering')
+#plot the clustering results
+plot(input_dat, pch=21, col=clust$cluster, bg=clust$cluster, main = 'K-Branch clustering')
 
 
 }

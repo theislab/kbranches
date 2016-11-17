@@ -16,8 +16,7 @@ Dist: a matrix containing all sample distances (square Euclidean)
 Computes all SQUARED pairwise distances of data points.
 }
 \examples{
-\dontrun{
- Dist=compute_all_distances(scdata.3lines)
-}
+data(scdata.3lines.simulated6genes)
+Dist <- compute_all_distances(scdata.3lines.simulated6genes)
 }
 

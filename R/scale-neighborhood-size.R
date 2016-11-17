@@ -12,12 +12,11 @@
 #'@return Kscaled: the scaled neighbourhood size
 #'
 #'@examples
-#'\dontrun{
-#' Dist=compute_all_distances(scdata.3lines)
+#' data(scdata.3lines.simulated6genes)
+#' Dist <- compute_all_distances(scdata.3lines.simulated6genes)
 #'
-#' #find the 5 nearest neghbours of the second sample
-#' neibs=find_K_nearest(n=2,K=5,Dist=Dist)
-#'}
+#' #find the 5 nearest neighbours of the second sample
+#' neibs <- find_K_nearest(n = 2, K = 5, Dist = Dist)
 #'@export
 scale_S_neib=function(input_dat,n,K_init,Dist,dmin)
 {
