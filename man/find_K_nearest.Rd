@@ -15,8 +15,7 @@ find_K_nearest(n, K = 3, Dist)
 }
 \value{
 a list with elements:
-\itemize
-{
+\itemize{
  \item - pos: the positions (rows) of the N nearest neighbours.
  \item - dst: the distances of the N nearest neighbours.
 }

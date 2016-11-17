@@ -2,7 +2,7 @@
 % Please edit documentation in R/kbranch.R
 \name{kbranch.local}
 \alias{kbranch.local}
-\title{Local K-Star clustering for identifying regions of interest!}
+\title{Local K-Branch clustering for identifying regions of interest!}
 \usage{
 kbranch.local(input_dat, Dmat = NULL, S_neib = NULL, S_quant = 0.1,
   S_GUI_helper = FALSE, parallel_ncores = NULL, min_radius_quantile = 0.5,
@@ -45,8 +45,7 @@ Defaults to 5, increase it (e.g. to 10 or 100) if the results are too noisy.}
 }
 \value{
 a list with elements:
-\itemize
-{
+\itemize{
  \item - gap_scores: list of the four different gap scores for each sample.
  \item - call: the call of the function
  \item - S_neib: the global value of S_neib used, or 'local' if global_S was false
@@ -100,8 +99,7 @@ such as tips of branches or branching regions
 
  #plot the branching_region(s)
  plot(input_dat,pch=21,col=branch_reg$cluster+1,bg=branch_reg$cluster+1,main='branching regions')
-\dontrun
-{
+\dontrun{
  ###################################################
  #          end of example                         #
  ###################################################

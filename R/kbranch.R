@@ -1,5 +1,13 @@
+#' Clustering on single cell trajectories.
 #'
-#'Local K-Star clustering for identifying regions of interest!
+#' The \pkg{kbranch} package provides two main functions
+#' \itemize{
+#'    \item \code{\link{kbranch.global}}
+#'    \item \code{\link{kbranch.local}}
+#' }
+"_PACKAGE"
+#'
+#'Local K-Branch clustering for identifying regions of interest!
 #'
 #'Perform local clustering using kbranch.global in order to generate a GAP score for each sample.
 #'The GAP score of each sample can be subsequantly used to identify regions of interest
@@ -27,8 +35,7 @@
 #'@param init_Kmeans: if TRUE, use K-Means for the initialization of K-haflines, otherwise use random initialization
 #'
 #'@return a list with elements:
-#'\itemize
-#'{
+#'\itemize{
 #'  \item - gap_scores: list of the four different gap scores for each sample.
 #'  \item - call: the call of the function
 #'  \item - S_neib: the global value of S_neib used, or 'local' if global_S was false
@@ -77,8 +84,7 @@
 #'
 #'  #plot the branching_region(s)
 #'  plot(input_dat,pch=21,col=branch_reg$cluster+1,bg=branch_reg$cluster+1,main='branching regions')
-#'\dontrun
-#'{
+#'\dontrun{
 #'  ###################################################
 #'  #          end of example                         #
 #'  ###################################################
@@ -534,8 +540,7 @@ kbranch.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helper=
 #'@param repeats: number of times to estimate nclust (for stability - the nclust most frequently considered 'best' is finally extracted). Only used if nclust==NULL
 #'
 #'@return a list with elements:
-#'\itemize
-#'{
+#'\itemize{
 #'  \item - is_in_region: a logical vector indicating which samples are part of the region (TRUE) and which not (FALSE)
 #'  \item - is_in_region_filtered: same as 'is_in_region', but after S_neib filtering to reduce noise.
 #'  \item - cluster: cluster assignment for each of the data points in is_in_region_filtered
@@ -757,16 +762,14 @@ identify_regions=function(input_dat,mode='tip',tip_mode='3',gap_scores=NULL,smoo
 #'@param dotsize2: size of points of class2 (green), used when plotting in 3D
 #'
 #'@return a list with elements:
-#'\itemize
-#'{
+#'\itemize{
 #'  \item - is_in_region: a logical vector indicating which samples are part of the region (TRUE) and which not (FALSE)
 #'  \item - is_in_region_filtered: same as 'is_in_region', but after S_neib filtering to reduce noise.
 #'}
 #'
 #'@examples
 #'this is an example
-#'\dontrun
-#'{
+#'\dontrun{
 #'
 #'  example coming soon...
 #'
@@ -891,8 +894,7 @@ refilter_identified_regions=function(input_dat,sample_labels=NULL,smoothing_regi
 #'@return Kscaled: the scaled neighbourhood size
 #'
 #'@examples
-#'\dontrun
-#'{
+#'\dontrun{
 #' Dist=compute_all_distances(scdata.3lines)
 #'
 #' #find the 5 nearest neghbours of the second sample
@@ -930,10 +932,10 @@ scale_S_neib=function(input_dat,n,K_init,Dist,dmin)
 
 
 #'
-#'Clustering on K-Halflines
+#'Clustering on K branches
 #'
 #'Clusters data on K-Halflines with a common center
-#'and calculates the corresponding GAP statistic
+#'and calculates the corresponding GAP statistic (optional)
 #'
 #'@param input_dat: data frame of input data with rows=samles and cols=dimensions.
 #'@param Kappa: number of clusters (halflines)
@@ -953,8 +955,7 @@ scale_S_neib=function(input_dat,n,K_init,Dist,dmin)
 #'@param show_plots_GAP: if TRUE, show the plots when performing clustering under the null distribution to calculate the GAP statistic (for debugging)
 #'
 #'@return a list with elements:
-#'\itemize
-#'{
+#'\itemize{
 #'  \item - cluster: cluster assignment for each sample (numeric)
 #'  \item - Kappa: number of clusters (halflines)
 #'  \item - err: total clustering cost
@@ -979,7 +980,7 @@ scale_S_neib=function(input_dat,n,K_init,Dist,dmin)
 #'  #cluster the 2D data on three haflines
 #'  set.seed(1)
 #'
-#'  #laod the data
+#'  #load the data
 #'  raw_dat=scdata.3lines.simulated6genes_subsampled
 #'
 #'  #perform diffusion map dimensionality reduction
@@ -2001,8 +2002,7 @@ compute_all_distances=function(input_dat)
 #'@param Dist: matrix containing sample distances, initially computed by compute_all_distances
 #'
 #'@return a list with elements:
-#'\itemize
-#'{
+#'\itemize{
 #'  \item - pos: the positions (rows) of the N nearest neighbours.
 #'  \item - dst: the distances of the N nearest neighbours.
 #'}

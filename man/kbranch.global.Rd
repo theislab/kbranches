@@ -2,7 +2,7 @@
 % Please edit documentation in R/kbranch.R
 \name{kbranch.global}
 \alias{kbranch.global}
-\title{Clustering on K-Halflines}
+\title{Clustering on K branches}
 \usage{
 kbranch.global(input_dat, Kappa, Dmat = NULL, init_Kmeans = TRUE,
   c0 = NULL, Vmat = NULL, nstart = 20, nstart_GAP = 20,
@@ -45,8 +45,7 @@ kbranch.global(input_dat, Kappa, Dmat = NULL, init_Kmeans = TRUE,
 }
 \value{
 a list with elements:
-\itemize
-{
+\itemize{
  \item - cluster: cluster assignment for each sample (numeric)
  \item - Kappa: number of clusters (halflines)
  \item - err: total clustering cost
@@ -69,13 +68,13 @@ a list with elements:
 }
 \description{
 Clusters data on K-Halflines with a common center
-and calculates the corresponding GAP statistic
+and calculates the corresponding GAP statistic (optional)
 }
 \examples{
  #cluster the 2D data on three haflines
  set.seed(1)
 
- #laod the data
+ #load the data
  raw_dat=scdata.3lines.simulated6genes_subsampled
 
  #perform diffusion map dimensionality reduction
