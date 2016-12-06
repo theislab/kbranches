@@ -41,7 +41,7 @@ clust=kbranch.global(input_dat,Kappa=3)
 
 Then, the data can be plotted using cluster assignment `clust$cluster` as color:
 
-![Demonstration of kbranch.global for K=3 branches.](figs/kbranch_global.png)
+![Demonstration of kbranch.global for K=3 branches.](vignettes/figs/kbranch_global.png)
  
 <!-- # ```{r kbranch.global plot} -->
 <!-- # #(dmap, 1:2, col = clust$cluster, pch = 20) -->
@@ -109,7 +109,7 @@ plot(input_dat, pch = 21, col = branch_reg$cluster + 1, bg = branch_reg$cluster 
 
 ```
 
-![Three tip and one branching regions were identified.](figs/identified_regions.png)
+![Three tip and one branching regions were identified.](vignettes/figs/identified_regions.png)
 
 
 <!-- ![](figs/branching_regions.png) -->
