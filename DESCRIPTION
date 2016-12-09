@@ -1,6 +1,6 @@
-Package: kbranch
+Package: kbranches
 Type: Package
-Title: K-Branch clustering
+Title: K-Branches clustering
 Version: 0.1
 Date: 2016-06-03
 Author: Nikolaos-Kosmas Chlis

@@ -58,14 +58,14 @@
 #' input_dat <- destiny::as.data.frame(dmap)[, 1:2]
 #'
 #' #cluster into a K-Star with K=3
-#' clust <- kbranch.global(input_dat, Kappa = 3)
+#' clust <- kbranches.global(input_dat, Kappa = 3)
 #'
 #' #plot the clustering results
 #' plot(input_dat, pch=21, col=clust$cluster, bg=clust$cluster, main = 'K-Branch clustering')
 #'
 #'
 #'@export
-kbranch.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=NULL,nstart=20,nstart_GAP=20,nstart_kmeans=20,B_GAP=NULL,
+kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vmat=NULL,nstart=20,nstart_GAP=20,nstart_kmeans=20,B_GAP=NULL,
                         fixed_center=NULL,medoids=FALSE,silent=TRUE,silent_internal=TRUE,show_plots=FALSE,show_lines = TRUE,show_plots_GAP=FALSE)
 {
   #   external function for clustering k halflines

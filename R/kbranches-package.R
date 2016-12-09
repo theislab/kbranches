@@ -2,7 +2,7 @@
 #'
 #' The \pkg{kbranch} package provides two main functions
 #' \itemize{
-#'    \item \code{\link{kbranch.global}}
-#'    \item \code{\link{kbranch.local}}
+#'    \item \code{\link{kbranches.global}}
+#'    \item \code{\link{kbranches.local}}
 #' }
 "_PACKAGE"

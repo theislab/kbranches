@@ -55,7 +55,7 @@
 #' #if you haven't specified the neighbourhood size S, it will be estimated
 #' #set S_GUI_helper to FALSE for manual fine-tuning
 #'
-#' res <- kbranch.local(input_dat = input_dat, Dmat = Dmat)
+#' res <- kbranches.local(input_dat = input_dat, Dmat = Dmat)
 #'
 #' #identify regions of interest based on the GAP score
 #' #of each sample computed by kbranch.local
@@ -89,7 +89,7 @@
 #'@importFrom parallel detectCores makeCluster
 #'@importFrom foreach foreach getDoParWorkers %dopar%
 #'@importFrom fgui gui guiGetValue guiSetValue
-kbranch.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helper=FALSE,parallel_ncores=NULL,min_radius_quantile=0.5,logfile='log.kbranch.local.txt',
+kbranches.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helper=FALSE,parallel_ncores=NULL,min_radius_quantile=0.5,logfile='log.kbranch.local.txt',
                        nstart=5,nstart_GAP=1,B_GAP=5,medoids=FALSE,init_Kmeans=TRUE)
 {
   # kbranch.local: identify regions based on the gap statistic produced by local clustering of k halflines
