@@ -21,6 +21,7 @@ The purpose of this method is to cluster all data point into a set of K halfline
 The code also provides and example of how to use the destiny package to calculate the diffusion map representation of the data.
 The sigma hyperparameter of destiny::DiffusionMap a user specified hyperparameter, but the package is also able to estimate an appropriate value.
 ```{r kbranches.global, eval=FALSE}
+library(kbranches)
 set.seed(1)
 pal=RColorBrewer::brewer.pal(8,"Dark2")#change the color palette
 
@@ -61,6 +62,7 @@ Another argument to be considered is *parallel_ncores*, which determines the num
 Here we present a minimal example where *kbranches.local* runs on a toy dataset. Default values are used for all parameters. The input data is already in diffusion map space, so no preprocessing by destiny takes place. Nonetheless, an illustration of how to get the diffusion map representation of a dataset, was presented in the example of the previous section. 
 
 ```{r kbranches.local.run, eval=FALSE}
+library(kbranches)
 set.seed(1)
 pal=RColorBrewer::brewer.pal(8,"Dark2")#change the color palette
 
