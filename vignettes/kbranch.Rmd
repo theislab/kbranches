@@ -100,13 +100,13 @@ branch_reg <- identify_regions(input_dat = input_dat, gap_scores = res$gap_score
 dev.new();par(mfrow=c(1,2))
 
 #plot the separate tips
-plot(input_dat, pch=21, col = tips$cluster + 1, bg = tips$cluster + 1,
+plot(input_dat, pch=21, col = pal[tips$cluster + 1], bg = pal[tips$cluster + 1],
      main='tip regions')
 
 
 
 #plot the branching_region(s), in this example we only have one branching region
-plot(input_dat, pch = 21, col = branch_reg$cluster + 1, bg = branch_reg$cluster + 1,
+plot(input_dat, pch = 21, col = pal[branch_reg$cluster + 1], bg = pal[branch_reg$cluster + 1],
      main = 'branching regions')
 
 ```

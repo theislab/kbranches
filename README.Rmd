@@ -14,6 +14,16 @@ library(kbranches)
 
 This document provides some basic use cases for the kbranches package. The main idea behind the K-Branches method is to identify regions of interest (branching regions and tips) in differentiation trajectories of single cells. So far, K-Branches is intended to be used on the diffusion map representation of the data, so the user should either provide the data in diffusion map space or use the [destiny](http://bioconductor.org/packages/release/bioc/html/destiny.html) package perform diffusion map dimensionality reduction.
 
+## Installation instructions
+First, you should install `destiny`, which can be used to compute Diffusion Map dimensionality reduction. Then you can install `kbranches` and its other dipendencies.
+```{r installation, eval=FALSE}
+#First install destiny
+devtools::install_github('theislab/destiny')
+
+#Then install kbranches
+devtools::install_github('theislab/kbranches')
+```
+
 ## Global K-Branches
 
 The purpose of this method is to cluster all data point into a set of K halflines (branches) with a common center. The number of branches K is a user defined hyperparameter. Moreover, the method can compute the GAP statistic, as well as a modified version of the GAP statistic that measures the dispersion around the branches, as opposed to the original GAP that measures the dispersion around cluster means. The main purpose of this method is to be used locally to identify branching and tip regions in the data. However, it is useful to develop an understanding of how the clustering method works. To this extent, the following example is presented.
@@ -22,6 +32,7 @@ The code also provides and example of how to use the destiny package to calculat
 The sigma hyperparameter of destiny::DiffusionMap a user specified hyperparameter, but the package is also able to estimate an appropriate value.
 ```{r kbranches.global, eval=FALSE}
 set.seed(1)
+pal=RColorBrewer::brewer.pal(8,"Dark2")#change the color palette
 
 #load the data
 raw_dat=scdata.3lines.simulated6genes_subsampled
@@ -63,6 +74,7 @@ Here we present a minimal example where *kbranches.local* runs on a toy dataset.
 
 ```{r kbranches.local.run, eval=FALSE}
 set.seed(1)
+pal=RColorBrewer::brewer.pal(8,"Dark2")#change the color palette
 
 #load the data, already in diffusion map format
 data(scdata.loop.dmap)
@@ -98,13 +110,13 @@ branch_reg <- identify_regions(input_dat = input_dat, gap_scores = res$gap_score
 dev.new();par(mfrow=c(1,2))
 
 #plot the separate tips
-plot(input_dat, pch=21, col = tips$cluster + 1, bg = tips$cluster + 1,
+plot(input_dat, pch=21, col = pal[tips$cluster + 1], bg = pal[tips$cluster + 1],
      main='tip regions')
 
 
 
 #plot the branching_region(s), in this example we only have one branching region
-plot(input_dat, pch = 21, col = branch_reg$cluster + 1, bg = branch_reg$cluster + 1,
+plot(input_dat, pch = 21, col = pal[branch_reg$cluster + 1], bg = pal[branch_reg$cluster + 1],
      main = 'branching regions')
 
 ```
