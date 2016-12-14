@@ -22,6 +22,7 @@ The code also provides and example of how to use the destiny package to calculat
 The sigma hyperparameter of destiny::DiffusionMap a user specified hyperparameter, but the package is also able to estimate an appropriate value.
 ```{r kbranches.global, eval=FALSE}
 set.seed(1)
+pal=RColorBrewer::brewer.pal(8,"Dark2")#change the color palette
 
 #load the data
 raw_dat=scdata.3lines.simulated6genes_subsampled
@@ -63,6 +64,7 @@ Here we present a minimal example where *kbranches.local* runs on a toy dataset.
 
 ```{r kbranches.local.run, eval=FALSE}
 set.seed(1)
+pal=RColorBrewer::brewer.pal(8,"Dark2")#change the color palette
 
 #load the data, already in diffusion map format
 data(scdata.loop.dmap)
