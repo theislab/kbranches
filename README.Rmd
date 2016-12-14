@@ -37,9 +37,6 @@ pal=RColorBrewer::brewer.pal(8,"Dark2")#change the color palette
 #load the data
 raw_dat=scdata.3lines.simulated6genes_subsampled
 
-#laod the data
-raw_dat=scdata.3lines.simulated6genes_subsampled
-
 #perform diffusion map dimensionality reduction
 dmap=destiny::DiffusionMap(raw_dat,sigma = 1000)
 
@@ -48,9 +45,11 @@ input_dat=destiny::as.data.frame(dmap)[,1:2]
 
 #cluster into a K-Star with K=3
 clust=kbranches.global(input_dat,Kappa=3)
+
+#plot cluster assignments
+plot(input_dat,col=pal[clust$cluster],pch=21,bg=pal[clust$cluster])
 ```
 
-Then, the data can be plotted using cluster assignment `clust$cluster` as color:
 
 ![Demonstration of kbranches.global for K=3 branches.](vignettes/figs/kbranch_global.png)
  
