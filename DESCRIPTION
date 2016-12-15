@@ -6,7 +6,7 @@ Date: 2016-06-03
 Author: Nikolaos-Kosmas Chlis
 Maintainer: <nikolaos.chlis@helmholtz-muenchen.de>
 Description: Branching and tip region identification in single cell trajectories
-License: 
+License: GNU GPLv3
 LazyData: TRUE
 RoxygenNote: 5.0.1
 Depends: R (>= 3.2.0)
