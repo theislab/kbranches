@@ -14,6 +14,8 @@ library(kbranches)
 
 This document provides some basic use cases for the kbranches package. The main idea behind the K-Branches method is to identify regions of interest (branching regions and tips) in differentiation trajectories of single cells. So far, K-Branches is intended to be used on the diffusion map representation of the data, so the user should either provide the data in diffusion map space or use the [destiny](http://bioconductor.org/packages/release/bioc/html/destiny.html) package perform diffusion map dimensionality reduction.
 
+If you use this package for your work, please cite the **corresponding paper**: [Model-based branching point detection in single-cell data by K-Branches clustering, doi: https://doi.org/10.1101/094532 ](https://doi.org/10.1101/094532)
+
 ## Installation instructions
 First, you should install `destiny`, which can be used to compute Diffusion Map dimensionality reduction. Then you can install `kbranches` and its other dependencies.
 ```{r installation, eval=FALSE}
