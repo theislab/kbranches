@@ -127,10 +127,11 @@ $(document).ready(function () {
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>This document provides some basic use cases for the kbranches package. The main idea behind the K-Branches method is to identify regions of interest (branching regions and tips) in differentiation trajectories of single cells. So far, K-Branches is intended to be used on the diffusion map representation of the data, so the user should either provide the data in diffusion map space or use the <a href="http://bioconductor.org/packages/release/bioc/html/destiny.html">destiny</a> package perform diffusion map dimensionality reduction.</p>
+<p>If you use this package for your work, please cite the <strong>corresponding paper</strong>: <a href="https://doi.org/10.1101/094532">Model-based branching point detection in single-cell data by K-Branches clustering, doi: https://doi.org/10.1101/094532</a></p>
 </div>
 <div id="installation-instructions" class="section level2">
 <h2>Installation instructions</h2>
-<p>First, you should install <code>destiny</code>, which can be used to compute Diffusion Map dimensionality reduction. Then you can install <code>kbranches</code> and its other dipendencies.</p>
+<p>First, you should install <code>destiny</code>, which can be used to compute Diffusion Map dimensionality reduction. Then you can install <code>kbranches</code> and its other dependencies.</p>
 <pre class="r"><code>#First install destiny
 devtools::install_github('theislab/destiny')
 
