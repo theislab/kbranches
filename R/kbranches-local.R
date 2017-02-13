@@ -1,7 +1,7 @@
 #'
 #'Local K-Branch clustering for identifying regions of interest!
 #'
-#'Perform local clustering using kbranch.global in order to generate a GAP score for each sample.
+#'Perform local clustering using kbranches.global in order to generate a GAP score for each sample.
 #'The GAP score of each sample can be subsequantly used to identify regions of interest
 #'such as tips of branches or branching regions
 #'
@@ -58,7 +58,7 @@
 #' res <- kbranches.local(input_dat = input_dat, Dmat = Dmat)
 #'
 #' #identify regions of interest based on the GAP score
-#' #of each sample computed by kbranch.local
+#' #of each sample computed by kbranches.local
 #'
 #' #If smoothing_region and smoothing_region_thresh are NULL, a GUI will
 #' #pop-up to aid in their selection. Press OK to update the results.
@@ -89,10 +89,10 @@
 #'@importFrom parallel detectCores makeCluster
 #'@importFrom foreach foreach getDoParWorkers %dopar%
 #'@importFrom fgui gui guiGetValue guiSetValue
-kbranches.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helper=FALSE,parallel_ncores=NULL,min_radius_quantile=0.5,logfile='log.kbranch.local.txt',
+kbranches.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helper=FALSE,parallel_ncores=NULL,min_radius_quantile=0.5,logfile='log.kbranches.local.txt',
                        nstart=5,nstart_GAP=1,B_GAP=5,medoids=FALSE,init_Kmeans=TRUE)
 {
-  # kbranch.local: identify regions based on the gap statistic produced by local clustering of k halflines
+  # kbranches.local: identify regions based on the gap statistic produced by local clustering of k halflines
 
   ###these variables are required for compatibility with future releases###
   input_dat_orig=NULL
@@ -429,7 +429,7 @@ kbranches.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helpe
       for(k in 1:length(K_all))
       {
         Kappa=K_all[k]
-        clust=kbranch.global(Kappa=Kappa,input_dat=local_dat,c0=NULL,Vmat=NULL,silent=T,nstart=nstart,nstart_GAP=nstart_GAP,B_GAP=B_GAP,fixed_center=1,medoids=medoids,Dmat=D_local,init_Kmeans = init_Kmeans)
+        clust=kbranches.global(Kappa=Kappa,input_dat=local_dat,c0=NULL,Vmat=NULL,silent=T,nstart=nstart,nstart_GAP=nstart_GAP,B_GAP=B_GAP,fixed_center=1,medoids=medoids,Dmat=D_local,init_Kmeans = init_Kmeans)
         tmp_gap[k]=clust$GAP
         tmp_gapl[k]=clust$GAPl
         tmp_gap_orig[k]=clust$GAP_orig
@@ -449,17 +449,17 @@ kbranches.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helpe
       for(k in 1:length(K_all))
       {
         Kappa=K_all[k]
-        clust=kbranch.global(Kappa=Kappa,input_dat=local_dat_orig,c0=NULL,Vmat=NULL,silent=T,nstart=nstart,nstart_GAP=NULL,B_GAP=NULL,fixed_center=1,medoids=medoids,Dmat=D_local_orig,init_Kmeans = init_Kmeans)
+        clust=kbranches.global(Kappa=Kappa,input_dat=local_dat_orig,c0=NULL,Vmat=NULL,silent=T,nstart=nstart,nstart_GAP=NULL,B_GAP=NULL,fixed_center=1,medoids=medoids,Dmat=D_local_orig,init_Kmeans = init_Kmeans)
 
         #calculate the class centers
         centers=matrix(NA,nrow = Kappa,ncol = P)
         for(k in 1:Kappa){centers[k,]=colMeans(local_dat[clust$cluster==k,,drop=FALSE])}
 
-        #fist estimate the kbranch.global error in dmap space, using the cluster labels from the original space
+        #fist estimate the kbranches.global error in dmap space, using the cluster labels from the original space
         #Vmat is equal to the centers matrix calculated above, centered at the data point being examined
         c0_local=as.numeric(local_dat[1,])#c0 is always row 1 in the local data
         Vmat_local=t(t(centers)-c0_local)
-        kbranch.global_err=0#clustering error
+        kbranches.global_err=0#clustering error
         for(i in 1:nrow(local_dat))#compute the error (distance from halfline object) for every data point
         {
           pos=clust$cluster[i]#select the direction vector according to the class of the data point
@@ -469,15 +469,15 @@ kbranches.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helpe
           x_hat=x-c0_local#take the C1 vector as the starting point of the axes of the vector space
           if(sign(as.numeric(x_hat%*%v))>=0)#check dot product positive -> must be close to half-line, not line
           {
-            kbranch.global_err=kbranch.global_err+(norm(as.matrix((x-c0_local)-((v%o%v)/as.numeric(v%*%v))%*%(x-c0_local)),'2')^2)#line_dist
+            kbranches.global_err=kbranches.global_err+(norm(as.matrix((x-c0_local)-((v%o%v)/as.numeric(v%*%v))%*%(x-c0_local)),'2')^2)#line_dist
           }else#point on the wrong side, measure distance from the center
           {
-            kbranch.global_err=kbranch.global_err+(norm(as.matrix(x-c0_local),'2')^2)#point_dist
+            kbranches.global_err=kbranches.global_err+(norm(as.matrix(x-c0_local),'2')^2)#point_dist
           }
         }
 
         #calculate the GAP
-        resGAP=calculate_GAP(input_dat=local_dat,clustering_error=kbranch.global_err,Kappa=Kappa,cluster_labels=clust$cluster,
+        resGAP=calculate_GAP(input_dat=local_dat,clustering_error=kbranches.global_err,Kappa=Kappa,cluster_labels=clust$cluster,
                              nstart_GAP=nstart_GAP,B_GAP=B_GAP,fixed_center=1,medoids=medoids,Dmat=D_local,init_Kmeans = init_Kmeans)
         tmp_gap[k]=resGAP$GAP
         tmp_gapl[k]=resGAP$GAPl

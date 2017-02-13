@@ -6,7 +6,7 @@
 \usage{
 kbranches.local(input_dat, Dmat = NULL, S_neib = NULL, S_quant = 0.1,
   S_GUI_helper = FALSE, parallel_ncores = NULL, min_radius_quantile = 0.5,
-  logfile = "log.kbranch.local.txt", nstart = 5, nstart_GAP = 1,
+  logfile = "log.kbranches.local.txt", nstart = 5, nstart_GAP = 1,
   B_GAP = 5, medoids = FALSE, init_Kmeans = TRUE)
 }
 \arguments{
@@ -52,7 +52,7 @@ a list with elements:
 }
 }
 \description{
-Perform local clustering using kbranch.global in order to generate a GAP score for each sample.
+Perform local clustering using kbranches.global in order to generate a GAP score for each sample.
 The GAP score of each sample can be subsequantly used to identify regions of interest
 such as tips of branches or branching regions
 }
@@ -81,7 +81,7 @@ Dmat <- compute_all_distances(input_dat)
 res <- kbranches.local(input_dat = input_dat, Dmat = Dmat)
 
 #identify regions of interest based on the GAP score
-#of each sample computed by kbranch.local
+#of each sample computed by kbranches.local
 
 #If smoothing_region and smoothing_region_thresh are NULL, a GUI will
 #pop-up to aid in their selection. Press OK to update the results.
