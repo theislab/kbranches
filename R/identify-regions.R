@@ -1,13 +1,13 @@
 #'Identify regions of interest
 #'
 #'Identifies regions of interest (the tips of branches, or branching regions)
-#'based on comparing the GAP scores#'acquired by running local clustering by 'kbranch.local'.
+#'based on comparing the GAP scores#'acquired by running local clustering by 'kbranches.local'.
 #'Performs local filtering to reduce noise in the extracted labels.
 #'
 #'@param input_dat: data frame of input data with rows=samles and cols=dimensions.
 #'@param mode: =c('tip','branch') find either the tips or the branching regions
 #'@param tip_mode: =c('2','3','both') find the tips using the GAP statistic of 1 vs 2,3 or both
-#'@param gap_scores: list, output of function 'kbranch.local' for the same 'input_dat'
+#'@param gap_scores: list, output of function 'kbranches.local' for the same 'input_dat'
 #'@param smoothing_region: number of neighbours in to consider for label filtering
 #'@param smoothing_region_thresh: minimum number of thresholds with same label in the neighbourhood required for the sample to keep it's label
 #'@param Dist: matrix of sample to sample distances
@@ -31,7 +31,7 @@
 #'
 #'@examples
 #'
-#' #see example of kbranch.local
+#' #see example of kbranches.local
 #'
 #'@export
 identify_regions=function(input_dat,mode='tip',tip_mode='3',gap_scores=NULL,smoothing_region=NULL,smoothing_region_thresh=NULL,Dist,dotsize1=7,dotsize2=7,

@@ -93,7 +93,7 @@ calculate_GAP=function(input_dat,clustering_error,Kappa,cluster_labels,
       {
         D_GAP=NULL
       }
-      clust2=kbranch.global(Kappa=Kappa, input_dat=boot_dat,c0=NULL,Vmat=NULL,show_plots = show_plots_GAP,silent=silent, nstart = nstart_GAP,fixed_center=fixed_center,medoids=medoids,Dmat=D_GAP)
+      clust2=kbranches.global(Kappa=Kappa, input_dat=boot_dat,c0=NULL,Vmat=NULL,show_plots = show_plots_GAP,silent=silent, nstart = nstart_GAP,fixed_center=fixed_center,medoids=medoids,Dmat=D_GAP)
 
       err_b[b]=clust2$err
       err_b_log[b]=log(clust2$err)

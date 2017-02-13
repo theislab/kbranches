@@ -69,7 +69,7 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
                         fixed_center=NULL,medoids=FALSE,silent=TRUE,silent_internal=TRUE,show_plots=FALSE,show_lines = TRUE,show_plots_GAP=FALSE)
 {
   #   external function for clustering k halflines
-  #   serves as wrapper to kbranch.global_internal and also initializes c0 and Vmat if values have not been provided
+  #   serves as wrapper to kbranches.global_internal and also initializes c0 and Vmat if values have not been provided
   #   and calculates the GAP statistic for the given number of clusters
   #
   #   inputs:
@@ -111,7 +111,7 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
   #     -call: function call
 
   #######################################################
-  # Internal functions of kbranch.global
+  # Internal functions of kbranches.global
   #######################################################
 
   line_dist=function(x,c0,v_outer=NULL)
@@ -450,10 +450,10 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
     return(err)
   }
 
-  kbranch.global_internal=function(input_dat,Kappa,c0=NULL,Vmat=NULL,silent=FALSE,keep_c_fixed=FALSE)
+  kbranches.global_internal=function(input_dat,Kappa,c0=NULL,Vmat=NULL,silent=FALSE,keep_c_fixed=FALSE)
   {
     #   internal function for clustering k halflines
-    #   called by the wrapper function kbranch.global()
+    #   called by the wrapper function kbranches.global()
     #
     #   inputs:
     #     -input_dat: data frame of input data with rows=samles and cols=dimensions
@@ -580,10 +580,10 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
     return(retval)
   }
 
-  kbranch.global_internal_PAM=function(input_dat,Dmat=NULL,Kappa,c0_ix=NULL,Vmat_ix=NULL,silent=FALSE,keep_c_fixed=FALSE)
+  kbranches.global_internal_PAM=function(input_dat,Dmat=NULL,Kappa,c0_ix=NULL,Vmat_ix=NULL,silent=FALSE,keep_c_fixed=FALSE)
   {
     #   internal function for clustering k halflines
-    #   called by the wrapper function kbranch.global()
+    #   called by the wrapper function kbranches.global()
     #   uses a PAM like process to identify the K halflines
     #
     #   inputs:
@@ -820,7 +820,7 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
   }
 
   #######################################################
-  # end of internal functions of kbranch.global
+  # end of internal functions of kbranches.global
   #######################################################
 
   N=nrow(input_dat)#the number of samples
@@ -907,14 +907,14 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
             }
             Vmat_kmeans=Vmat
 
-            retval=kbranch.global_internal(Kappa=Kappa,input_dat=input_dat,c0=c0,Vmat=Vmat_kmeans,silent=silent_internal)
+            retval=kbranches.global_internal(Kappa=Kappa,input_dat=input_dat,c0=c0,Vmat=Vmat_kmeans,silent=silent_internal)
           }else#initialize using k-means
           {
             #initialize c0 to a random sample
             #initialize v1,...,vk to the k-means directions
 
             c0=as.numeric(input_dat[sample(x=NROW(input_dat),size=1),])#select a random data point as the center of the half-lines
-            retval=kbranch.global_internal(Kappa=Kappa,input_dat=input_dat,c0=c0,Vmat=Vmat_kmeans,silent=silent_internal)
+            retval=kbranches.global_internal(Kappa=Kappa,input_dat=input_dat,c0=c0,Vmat=Vmat_kmeans,silent=silent_internal)
           }
         }else #run the medoids version (with random initialization)
         {
@@ -922,7 +922,7 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
           c0=init_medoids_ix[1]#the first sample is the center of the halflines
           Vmat=init_medoids_ix[-1]#the rest Kappa samples are the direction vectors
           # print('starting internal')
-          retval=kbranch.global_internal_PAM(Dmat=Dmat,Kappa=Kappa,input_dat=input_dat,c0_ix=c0,Vmat_ix=Vmat,silent=silent_internal)
+          retval=kbranches.global_internal_PAM(Dmat=Dmat,Kappa=Kappa,input_dat=input_dat,c0_ix=c0,Vmat_ix=Vmat,silent=silent_internal)
         }
       }else #run K-Halflines with a fixed center and only update the direction vectors
       {
@@ -947,14 +947,14 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
             Vmat[i,]=Vmat[i,]-c0
           }
           Vmat_kmeans=Vmat
-          retval=kbranch.global_internal(Kappa=Kappa,input_dat=input_dat,c0=c0,Vmat=Vmat_kmeans,silent=silent_internal,keep_c_fixed=T)
+          retval=kbranches.global_internal(Kappa=Kappa,input_dat=input_dat,c0=c0,Vmat=Vmat_kmeans,silent=silent_internal,keep_c_fixed=T)
         }else#run the medoids version of the algorithm
         {
           c0=fixed_center
           set_ix=1:N
           set_ix=set_ix[-which(set_ix==c0)]#remove the index of the fixed center from the set of all available indices
           Vmat=sample(set_ix,Kappa)
-          retval=kbranch.global_internal_PAM(Dmat=Dmat,Kappa=Kappa,input_dat=input_dat,c0_ix=c0,Vmat_ix=Vmat,silent=silent_internal,keep_c_fixed=T)
+          retval=kbranches.global_internal_PAM(Dmat=Dmat,Kappa=Kappa,input_dat=input_dat,c0_ix=c0,Vmat_ix=Vmat,silent=silent_internal,keep_c_fixed=T)
         }
       }
       # print('got out of the run medoids')
@@ -1026,7 +1026,7 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
   {
     if(silent==FALSE){print('c0 and Vmat manually provided')}
     #if c0 and Vmat have been provided, simply run the function
-    retval=kbranch.global_internal(Kappa,input_dat,c0,Vmat,silent)
+    retval=kbranches.global_internal(Kappa,input_dat,c0,Vmat,silent)
   }
 
   retval$cluster=as.integer(retval$dclass$class)
