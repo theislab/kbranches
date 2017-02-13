@@ -400,7 +400,7 @@ kbranches.local=function(input_dat,Dmat=NULL,S_neib=NULL,S_quant=0.1,S_GUI_helpe
 
   writeLines(c(''), logfile)
   #res_foreach <- foreach(i=1:N,.export = curr_env) %dopar%
-  res_foreach <- foreach(i=1:N,.packages = 'kbranch') %dopar%
+  res_foreach <- foreach(i=1:N,.packages = 'kbranches') %dopar%
   {
     #print the progress in a logfile
     sink(logfile,append = T)
