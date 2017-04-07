@@ -35,7 +35,7 @@
 #'
 #'@export
 identify_regions=function(input_dat,mode='tip',tip_mode='3',gap_scores=NULL,smoothing_region=NULL,smoothing_region_thresh=NULL,Dist,dotsize1=7,dotsize2=7,
-                          nclust=NULL,nclust.max=5, B.max=100, SE.factor = 2.58, repeats = 20)#scale the number of neighbors depending on the local density)
+                          nclust=NULL,nclust.max=5, B.max=100, SE.factor = 2.58, repeats = 20, gapm_tips=F)#scale the number of neighbors depending on the local density)
 {
 
   #   finds and filters the tips of branches, or branching regions
@@ -65,7 +65,14 @@ identify_regions=function(input_dat,mode='tip',tip_mode='3',gap_scores=NULL,smoo
 
   if(mode=='tip')
   {
-    gscore=gap_scores$gscore_orig #original gap score
+    if(gapm_tips==T)
+    {
+      gscore=gap_scores$gscore #modified gap score
+    }else
+    {
+      gscore=gap_scores$gscore_orig #original gap score
+    }
+    
     is_edge_1v2=gscore[,1]>gscore[,2]
     is_edge_1v3=gscore[,1]>gscore[,3]
     if(tip_mode=='2')
@@ -78,6 +85,12 @@ identify_regions=function(input_dat,mode='tip',tip_mode='3',gap_scores=NULL,smoo
     {
       is_edge=is_edge_1v2|is_edge_1v3#logical OR: is edge if it is edge for 1v2 OR for 1v3
     }
+    if(gapm_tips==T)
+    {
+      fp=gscore[,3]>gscore[,2]#possible false positives
+      is_edge[fp==T]=FALSE#remove false positive tips
+    }
+    
   }else#branching region
   {
     gscore=gap_scores$gscore #modified gap score

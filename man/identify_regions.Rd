@@ -8,7 +8,7 @@ identify_regions(input_dat, mode = "tip", tip_mode = "3",
   gap_scores = NULL, smoothing_region = NULL,
   smoothing_region_thresh = NULL, Dist, dotsize1 = 7, dotsize2 = 7,
   nclust = NULL, nclust.max = 5, B.max = 100, SE.factor = 2.58,
-  repeats = 20)
+  repeats = 20, gapm_tips = F)
 }
 \arguments{
 \item{input_dat:}{data frame of input data with rows=samles and cols=dimensions.}

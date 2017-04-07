@@ -84,7 +84,7 @@ dmap <- destiny::DiffusionMap(raw_dat, sigma = 1000)
 #keep the first 2 diffusion components
 input_dat <- destiny::as.data.frame(dmap)[, 1:2]
 
-#cluster into a K-Star with K=3
+#cluster with K=3
 clust <- kbranches.global(input_dat, Kappa = 3)
 
 #plot the clustering results

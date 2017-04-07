@@ -57,7 +57,7 @@
 #' #keep the first 2 diffusion components
 #' input_dat <- destiny::as.data.frame(dmap)[, 1:2]
 #'
-#' #cluster into a K-Star with K=3
+#' #cluster with K=3
 #' clust <- kbranches.global(input_dat, Kappa = 3)
 #'
 #' #plot the clustering results
@@ -164,8 +164,8 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
     #
     #   return values:
     #     -dclass: data frame of class label for each sample
-
-    xdata_class=data.frame(class=rep(0,nrow(input_dat)),wrong_x=rep(NA,nrow(input_dat)),wrong_y=rep(NA,nrow(input_dat)))
+    
+    xdata_class=data.frame(class=rep(0,nrow(input_dat)),wrong_x=rep(NA,nrow(input_dat)),wrong_y=rep(NA,nrow(input_dat)),wrong_side=rep(NA,nrow(input_dat)))
     for(i in 1:nrow(input_dat))
     {
       x=as.numeric(input_dat[i,])#otherwise matrix operations won't work
@@ -182,13 +182,14 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
           print(paste('x_hat',as.numeric(x_hat)))
           print(paste('v_k',as.numeric(v_k)))
           print(Vmat)}
-
+        
         if(sign(as.numeric(x_hat%*%v_k))>=0)#check dot product positive -> must be close to half-line, not line
         {
           #nc_dist_new=line_dist(x,c0,v_k)
           nc_dist_new=line_dist(x,c0,v_outer=v_outer)
           if(nc_dist_new<nc_dist)
           {
+            xdata_class$wrong_side[i]=F
             nc=k;
             nc_dist=nc_dist_new
           }
@@ -197,12 +198,13 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
           nc_dist_new=point_dist(x,c0)
           if(nc_dist_new<nc_dist)
           {
+            xdata_class$wrong_side[i]=T
             nc=k;
             nc_dist=nc_dist_new
           }
         }
       }
-
+      
       xdata_class$class[i]=nc;#assign closest cluster
       # View(xdata_class)
       if(nc==-1)#none of the three clusters was selected, all had negative dot-products
@@ -210,7 +212,6 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
         print(paste('------- ERROR! vector with x=',x[1],' y=',x[2],'-------'))
       }
     }
-
     return(dclass=xdata_class) #return the class for each sample
   }
 
@@ -295,7 +296,7 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
     return()
   }
 
-  update_Vmat=function(input_dat,Kappa,dclass,c0)#updates all direction vectors
+  update_Vmat=function(input_dat,Kappa,dclass,c0,Vmat_old=NULL)#updates all direction vectors
   {
     #   update Vmat, the directions of the halflines
     #
@@ -313,12 +314,12 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
     Vmat=matrix(data = 0,nrow = Kappa,ncol = P)
     for(k in 1:Kappa)#update each direction vector
     {
-      Vmat[k,]=update_v(input_dat=input_dat,dclass=dclass,cluster_selected=k,c0=c0)
+      Vmat[k,]=update_v(input_dat=input_dat,dclass=dclass,cluster_selected=k,c0=c0,v_old=Vmat_old[k,])
     }
     return(Vmat)
   }
 
-  update_v=function(input_dat,dclass,cluster_selected,c0)
+  update_v=function(input_dat,dclass,cluster_selected,c0,v_old=NULL)
   {
     #   update the direction vector v as the average direction of the selected cluster
     #
@@ -331,6 +332,85 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
     #   return values:
     #     -v_cm: updated direction vector
 
+    # data_centered=input_dat[dclass$class==cluster_selected,,drop=FALSE]
+    # data_centered=t(t(data_centered)-c0)
+    # v_cm=as.numeric(colMeans(data_centered))
+    # #v_cm=v_cm/sqrt(v_cm%*%v_cm)#normalize to unit length
+    # v_cm=v_cm/sqrt(sum(v_cm^2))#normalize to unit length
+    # return(v_cm)
+    
+    ix=(dclass$class==cluster_selected)&(dclass$wrong_side==F)
+    # print(paste('cluster',cluster_selected,'right:',sum(ix),'of',sum(dclass$class==cluster_selected)))
+    # print(sum(ix))
+    # plot(input_dat,main='test')
+    # points(input_dat[ix,],col=cluster_selected+1,pch=24,bg=cluster_selected+1)
+    if(sum(ix)==0)
+    {
+      print('no points on the right side, using all data points...')
+      ix=dclass$class==cluster_selected
+    }
+    data_centered=input_dat[ix,,drop=FALSE]
+    
+    # points(data_centered,pch=19,col=cluster_selected+1)
+    
+    # print(dim(data_centered))
+    
+    data_centered=t(t(data_centered)-c0)
+    data_centered=as.matrix(data_centered)
+    XtX=t(data_centered)%*%data_centered
+    # XtX=data_centered%*%t(data_centered)
+    # print(dim(XtX))
+    
+    # v_cm=as.numeric(colMeans(data_centered))
+    v_cm=as.numeric(eigen(XtX)$vectors[,1])
+    if(v_cm%*%v_old<0)
+    {
+      v_cm=-v_cm
+    }
+    
+    # print(NROW(v_cm))
+    # v_cm=v_cm/sqrt(v_cm%*%v_cm)#normalize to unit length
+    v_cm=v_cm/sqrt(sum(v_cm^2))#normalize to unit length
+    return(v_cm)
+    
+  }
+
+  update_VmatInit=function(input_dat,Kappa,dclass,c0)#updates all direction vectors
+  {
+    #   update Vmat, the directions of the halflines
+    #
+    #   inputs:
+    #     -input_dat: data frame of input data with rows=samles and cols=dimensions
+    #     -Kappa: number of clusters (halflines)
+    #     -dclass: data frame of class label for each sample
+    #     -c0: current value for the center of all half-lines
+    #
+    #   return values:
+    #     -Vmat: matrix whose K rows are the new direction vectors
+    
+    N=nrow(input_dat)#number of samples
+    P=ncol(input_dat)
+    Vmat=matrix(data = 0,nrow = Kappa,ncol = P)
+    for(k in 1:Kappa)#update each direction vector
+    {
+      Vmat[k,]=update_vInit(input_dat=input_dat,dclass=dclass,cluster_selected=k,c0=c0)
+    }
+    return(Vmat)
+  }
+  
+  update_vInit=function(input_dat,dclass,cluster_selected,c0)
+  {
+    #   update the direction vector v as the average direction of the selected cluster
+    #
+    #   inputs:
+    #     -input_dat: data frame of input data with rows=samles and cols=dimensions
+    #     -dclass: data frame of class label for each sample
+    #     -cluster_selected: numeric, corresponding to the cluster label for which the direction is updated
+    #     -c0: current value for the center of all half-lines
+    #
+    #   return values:
+    #     -v_cm: updated direction vector
+    
     data_centered=input_dat[dclass$class==cluster_selected,,drop=FALSE]
     data_centered=t(t(data_centered)-c0)
     v_cm=as.numeric(colMeans(data_centered))
@@ -338,7 +418,7 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
     v_cm=v_cm/sqrt(sum(v_cm^2))#normalize to unit length
     return(v_cm)
   }
-
+  
   update_c=function(input_dat,Kappa,dclass,c_old,Vmat)#updates the center/beginning of all halflines c, given data dat and direction vectors v1,v2,v3
   {
     #   update c, the center of the halflines
@@ -475,7 +555,7 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
 
     N=nrow(input_dat)#number of samples
     P=ncol(input_dat)#the number of dimensions, the data are in R^d (d-dimensional)
-
+    # errlist=list()
     #normalize each direction vector to unit length
     Vmat=t(apply(Vmat,1,function(x){x/sqrt(sum(x^2))}))
 
@@ -506,20 +586,50 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
     }
 
     c0_start=c0
+    c0_old=c0
     dclass_old=rep(0,length(dclass$class))
     i=1
     while(sum(dclass_old-dclass$class)!=0)#stop when no samples change clusters
     {
-      if(silent==FALSE){print(paste('round',i))}
-
+      if(silent==FALSE)
+      {
+        print(paste('round',i))
+        if(P==2){plot_hline_clust2D(input_dat,c0=c0,Vmat=Vmat,dclass=dclass,plot_title=paste('iter',i,'start'))}
+      }
+      
       if(keep_c_fixed==FALSE)#update the center, unless it is fixed
       {
+        c0_old=c0
         #update the center of the half-lines
         c0=update_c(Kappa=Kappa,input_dat = input_dat,dclass = dclass,Vmat,c_old = c0)#;print(c0)
+        
+        # plot_hline_clust2D(input_dat,c0=c0,Vmat=Vmat,dclass=dclass,plot_title=paste('iter',i,'start'))
+        # points(c0[1],c0[2],pch=24,bg='black',col='black')
+        
+        # #re-assign samples to clusters
+        # dclass_old=dclass$class#save old values to check for convergence
+        # dclass=assign_to_closest_hline(Kappa=Kappa,input_dat=input_dat,c0=c0,Vmat=Vmat)
+        # #perfrom check that all clusters have sumples
+        # if(length(unique(dclass$class))<Kappa)
+        # {
+        #   if(silent==FALSE)
+        #   {
+        #     print(paste('NOT all clusters have been assigned samples, only',length(unique(dclass$class)),'of',Kappa))
+        #     print('Quitting the clustering process...')
+        #   }
+        #   #crash detected, return NULL error and zero iterations
+        #   retval=list(dclass=dclass,Kappa=Kappa,err=NULL,iters=0,c0=c0,Vmat=Vmat)
+        #   return(retval)
+        # }else
+        # {
+        #   if(silent==FALSE){print(paste('OK, all clusters have been assigned samples:',length(unique(dclass$class)),'of',Kappa))}
+        # }
+        
       }
+      
       #update the direction vectors of the half-lines
       Vmat_old=Vmat
-      Vmat=update_Vmat(Kappa=Kappa,input_dat=input_dat,dclass=dclass,c0=c0)
+      Vmat=update_Vmat(Kappa=Kappa,input_dat=input_dat,dclass=dclass,c0=c0_old,Vmat_old=Vmat_old)
       if(anyNA(Vmat))#NA rows indicate directions with no samples assigned to them after updating the cluster labels in the previous round
       {
         #print('@@@@@@@@@@@@@@');print(unique(dclass$class));plot_hline_clust2D(input_dat,c0=c0,Vmat=Vmat_old,dclass=dclass,plot_title='Problem')
@@ -556,7 +666,20 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
       {
         #plot_hline_clust2D(input_dat,c0=c0,Vmat=Vmat,dclass=dclass,plot_title=paste('after iteration',i,'| with starting c0:',round(c0_start[1],2),',',round(c0_start[2],2)))
         plot_hline_clust2D(input_dat,c0=c0,Vmat=Vmat,dclass=dclass,plot_title=paste('after iteration',i))
+        points(Vmat[1,1],Vmat[1,2],pch=24,bg=2,col=2)
+        points(Vmat[2,1],Vmat[2,2],pch=24,bg=3,col=3)
+        points(Vmat[3,1],Vmat[3,2],pch=24,bg=4,col=4)
+        
+        points(c(0,Vmat[1,1]),c(0,Vmat[1,2]),type='l',col=2,lty='dashed')
+        points(c(Vmat[1,1]),c(Vmat[1,2]),pch=24,bg=2,col=2)
+        
+        points(c(0,Vmat[2,1]),c(0,Vmat[2,2]),type='l',col=3,lty='dashed')
+        points(c(Vmat[2,1]),c(Vmat[2,2]),pch=24,bg=3,col=3)
+        
+        points(c(0,Vmat[3,1]),c(0,Vmat[3,2]),type='l',col=4,lty='dashed')
+        points(c(Vmat[3,1]),c(Vmat[3,2]),pch=24,bg=4,col=4)
       }
+      # errlist[i]=total_clust_error(input_dat,dclass,c0,Vmat)
       i=i+1
     }
     i=i-1;#correct the value of i from the last iteration
@@ -869,7 +992,7 @@ kbranches.global=function(input_dat,Kappa,Dmat=NULL,init_Kmeans=TRUE,c0=NULL,Vma
 
         }else #Kappa>=3, set the directions to the K-means directions centered at the K-Means center
         {
-          Vmat_kmeans=update_Vmat(Kappa=Kappa,input_dat=input_dat,dclass=dclass,c0=c0_kmeans)
+          Vmat_kmeans=update_VmatInit(Kappa=Kappa,input_dat=input_dat,dclass=dclass,c0=c0_kmeans)
         }
 
         if(silent==FALSE)#print the k-Means initialization, if the results are 2 or 3 dimensional
